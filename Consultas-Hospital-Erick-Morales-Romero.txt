@@ -1,0 +1,216 @@
+1.- Todos los empleados del tipo 4 que tengan el cargo 3 y sean de la dependencia 5
+
+select nomTipoEmpleado, nomCargo, nomDependencia
+from tipoempleado inner join empleado on tipoempleado.id_tipoEmpleado=empleado.id_tipoEmpleado
+inner join cargo on empleado.id_cargo=cargo.id_cargo
+inner join dependencia on empleado.id_dependencia=dependencia.id_dependencia
+where nomTipoEmpleado='Eficiente' and  nomCargo='Secretaria' and nomDependencia='servicio farmaceutico'
+
+ +-----------------+------------+-----------------------+
+| nomTipoEmpleado | nomCargo   | nomDependencia        |
++-----------------+------------+-----------------------+
+| Eficiente       | Secretaria | servicio farmaceutico |
+| Eficiente       | Secretaria | servicio farmaceutico |
+| Eficiente       | Secretaria | servicio farmaceutico |
++-----------------+------------+-----------------------+
+
+2.- Todos los empleados que tengan el permiso 5, que sean el tipo de empleado 2 y
+pertenezcan a la dependencia 8.
+
+SELECT nomPermiso,nomTipoEmpleado ,nomDependencia from dependencia 
+inner join empleado on dependencia.id_dependencia=empleado.id_dependencia
+inner join tipoempleado on tipoempleado.id_tipoempleado=empleado.id_tipoempleado
+inner join usuario on empleado.id_usuario=usuario.id_usuario
+inner join permisosxusuario on permisosxusuario.id_usuario=usuario.id_usuario
+inner join permiso on permiso.id_permiso=permisosxusuario.id_permiso
+where nomDependencia = 'control interno' and nomTipoEmpleado = 'El social' and nomPermiso ='Permiso A'
+
++------------+-----------------+-----------------+
+| nomPermiso | nomTipoEmpleado | nomDependencia  |
++------------+-----------------+-----------------+
+| Permiso A  | El social       | control interno |
+| Permiso A  | El social       | control interno |
++------------+-----------------+-----------------+
+
+3.- Todas los pacientes que tengan el tratamiento 6 y que paguen mas de $5000,
+poner No. Factura y Fecha del pago.
+
+select nomPersona AS 'Paciente', nomTipoTratamiento, valor, factura.id_factura ,fechaPago
+from tipoTratamiento inner join tratamiento on tipoTratamiento.id_tipoTratamiento=tratamiento.id_tipoTratamiento
+inner join historiaClinica on tratamiento.id_historiaClinica=historiaClinica.id_historiaClinica
+inner join paciente on historiaClinica.id_historiaClinica=paciente.id_historiaClinica
+inner join factura on paciente.id_paciente=factura.id_paciente
+inner join pago on factura.id_factura=pago.id_factura
+inner join persona on paciente.id_persona=persona.id_persona
+where nomTipoTratamiento='Analgesico' and valor > 5000 
+
++----------+--------------------+-------+------------+------------+
+| Paciente | nomTipoTratamiento | valor | id_factura | fechaPago  |
++----------+--------------------+-------+------------+------------+
+| Rogan    | Analgesico         |  5500 |          6 | 2001-09-28 |
+| Wendell  | Analgesico         |  6800 |          7 | 2013-06-14 |
+| Yonda    | Analgesico         |  6050 |         11 | 2012-02-18 |
+| Ubayda   | Analgesico         |  5800 |         25 | 2018-06-13 |
+| Xenophon | Analgesico         |  5800 |         27 | 2017-12-05 |
+| Ketty    | Analgesico         |  6800 |         30 | 0000-00-00 |
+| Xoel     | Analgesico         |  5500 |         31 | 2015-06-18 |
+| Voleta   | Analgesico         |  5300 |         34 | 2014-07-10 |
+| Xerardo  | Analgesico         |  6050 |         40 | 2018-11-20 |
+| Vaina    | Analgesico         |  5800 |         41 | 2011-05-29 |
+| Ares     | Analgesico         |  6000 |         58 | 2010-05-11 |
+| Mateus   | Analgesico         |  6800 |         66 | 2009-06-12 |
+| Thomas   | Analgesico         |  5800 |         67 | 2006-12-04 |
+| Stevens  | Analgesico         |  7000 |         80 | 2011-04-10 |
+| Rogan    | Analgesico         |  5500 |         92 | 2016-01-05 |
+| Xerome   | Analgesico         |  5300 |         94 | 2016-05-14 |
+| Ximun    | Analgesico         |  5500 |        100 | 2015-10-04 |
++----------+--------------------+-------+------------+------------+
+
+4.- Todos los pacientes que tengan el tratamiento 10, que paguen entre $2500 y
+$6000 y su forma de pago sea en efectivo.
+
+select nomTipoTratamiento,nomFormaDePago,cuenta.valor from formadepago
+inner join pago on formadepago.id_formadepago=pago.id_formadepago
+inner join factura on pago.id_Factura=factura.id_factura
+inner join cuenta on factura.id_factura=cuenta.id_factura
+inner join paciente on paciente.id_paciente=factura.id_paciente
+inner join historiaclinica on historiaclinica.id_historiaclinica=paciente.id_historiaclinica
+inner join tratamiento on tratamiento.id_historiaclinica=historiaclinica.id_historiaclinica
+inner join tipotratamiento on tipotratamiento.id_tipotratamiento=tratamiento.id_tratamiento
+where nomTipoTratamiento='Anticonceptivo' and nomFormaDePago='Contado' and cuenta.valor between 2500 and 6000
+
++--------------------+----------------+-------+
+| nomTipoTratamiento | nomFormaDePago | valor |
++--------------------+----------------+-------+
+| Anticonceptivo     | Contado        |  2800 |
+| Anticonceptivo     | Contado        |  5500 |
++--------------------+----------------+-------+
+
+5.- Todos los pacientes que tengan el tratamiento 12, que paguen mas de $1000, que su fecha de pago sea el 30 de Marzo del 2015 y que tengan la dieta 15.
+
+select id_pago, nomTipoTratamiento,cuenta.valor,fechaPago,contenido from dieta
+inner join historiaclinica on historiaclinica.id_historiaclinica=dieta.id_historiaclinica 
+inner join tratamiento on tratamiento.id_historiaclinica=historiaclinica.id_historiaclinica  
+inner join tipotratamiento on tipotratamiento.id_tipotratamiento=tratamiento.id_tipotratamiento
+inner join paciente on paciente.id_historiaclinica=historiaclinica.id_historiaclinica
+inner join factura on factura.id_paciente=paciente.id_paciente
+inner join pago on factura.id_factura=pago.id_factura
+inner join cuenta on factura.id_factura=cuenta.id_factura
+where contenido='5 comidas al dia cada 3 horas rica en verdura' and nomTipoTratamiento='Anticonceptivo' and  fechaPago='2015-03-30 00:00:00' and cuenta.valor > 1000
+
++---------+--------------------+-------+---------------------+-----------------------------------------------+
+| id_pago | nomTipoTratamiento | valor | fechaPago           | contenido                                     |
++---------+--------------------+-------+---------------------+-----------------------------------------------+
+|      16 | Anticonceptivo     |  2500 | 2015-03-30 00:00:00 | 5 comidas al dia cada 3 horas rica en verdura |
+|      69 | Anticonceptivo     |  1200 | 2015-03-30 00:00:00 | 5 comidas al dia cada 3 horas rica en verdura |
+|      84 | Anticonceptivo     |  1350 | 2015-03-30 00:00:00 | 5 comidas al dia cada 3 horas rica en verdura |
+|      88 | Anticonceptivo     |  5850 | 2015-03-30 00:00:00 | 5 comidas al dia cada 3 horas rica en verdura |
++---------+--------------------+-------+---------------------+-----------------------------------------------+
+
+6.- Todos los pacientes que el resultado de su examen sea el 25 de Agosto del 2014 y que tengan la dieta 8
+
+select  nomPersona, resultado.fechaEntrega, dieta.descripcion
+from historiaClinica inner join examen on historiaClinica.id_historiaClinica=examen.id_historiaClinica
+inner join resultado on examen.id_examen=resultado.id_examen
+inner join dieta on historiaClinica.id_historiaClinica=dieta.id_historiaClinica
+inner join paciente on historiaClinica.id_historiaClinica=paciente.id_historiaClinica
+inner join persona on persona.id_persona=paciente.id_persona
+where fechaEntrega='2014-08-25' and dieta.descripcion='Dieta pos operatoria'
+
++------------+---------------------+----------------------+
+| nomPersona | fechaEntrega        | descripcion          |
++------------+---------------------+----------------------+
+| Wendell    | 2014-08-25 00:00:00 | Dieta pos operatoria |
+| Zandra     | 2014-08-25 00:00:00 | Dieta pos operatoria |
+| Yonda      | 2014-08-25 00:00:00 | Dieta pos operatoria |
+| Thomasa    | 2014-08-25 00:00:00 | Dieta pos operatoria |
+| Cressida   | 2014-08-25 00:00:00 | Dieta pos operatoria |
++------------+---------------------+----------------------+
+
+7.- Todos los pacientes que tengan el tratamiento 5, paguen con tarjeta de crédito y tengan una dieta 11
+
+select  nomPersona, tipoTratamiento.nomTipoTratamiento, formaDePago.nomFormaDePago, dieta.descripcion
+from tipoTratamiento inner join tratamiento on tipoTratamiento.id_tipoTratamiento=tratamiento.id_tipoTra
+inner join  historiaClinica on tratamiento.id_historiaClinica=historiaClinica.id_historiaClinica
+inner join dieta on historiaClinica.id_historiaClinica=dieta.id_historiaClinica
+inner join paciente on historiaClinica.id_historiaClinica=paciente.id_historiaClinica
+inner join factura on paciente.id_paciente=factura.id_paciente
+inner join pago on factura.id_factura=pago.id_factura
+inner join formaDePago on pago.id_formaDePago=formaDePago.id_formaDePago
+inner join persona on paciente.id_persona=persona.id_persona
+where nomTipoTratamiento='Analgesico' and  nomFormaDePago='Tarjeta' and dieta.descripcion='Dieta blanda'
+
++------------+--------------------+----------------+--------------+
+| nomPersona | nomTipoTratamiento | nomFormaDePago | descripcion  |
++------------+--------------------+----------------+--------------+
+| Thyra      | Analgesico         | Tarjeta        | Dieta blanda |
+| Venance    | Analgesico         | Tarjeta        | Dieta blanda |
+| Ximena     | Analgesico         | Tarjeta        | Dieta blanda |
+| Will       | Analgesico         | Tarjeta        | Dieta blanda |
+| Vamano     | Analgesico         | Tarjeta        | Dieta blanda |
+| Ubayda     | Analgesico         | Tarjeta        | Dieta blanda |
+| Teva       | Analgesico         | Tarjeta        | Dieta blanda |
+| Yonde      | Analgesico         | Tarjeta        | Dieta blanda |
+| Vaina      | Analgesico         | Tarjeta        | Dieta blanda |
+| Yonathan   | Analgesico         | Tarjeta        | Dieta blanda |
+| Zeus       | Analgesico         | Tarjeta        | Dieta blanda |
++------------+--------------------+----------------+--------------+
+
+8.- El promedio de pago para los pacientes que tengan una dieta 3 y su forma de pago sea en cheque
+
+select avg(cuenta.valor), nomFormaDePago, contenido from cuenta
+inner join factura on cuenta.id_factura=factura.id_factura
+inner join pago on factura.id_factura=pago.id_factura
+inner join formadepago on formadepago.id_formadepago=pago.id_formadepago
+inner join paciente on paciente.id_paciente=factura.id_paciente
+inner join historiaclinica on historiaclinica.id_historiaclinica=paciente.id_historiaclinica
+inner join dieta on dieta.id_historiaclinica=historiaclinica.id_historiaclinica
+where contenido='Te compras un iphone 6 y no tienes para comer' and nomFormaDePago='cheque bancario'
+
++-------------------+-----------------+-----------------------------------------------+
+| avg(cuenta.valor) | nomFormaDePago  | contenido                                     |
++-------------------+-----------------+-----------------------------------------------+
+|              2500 | Cheque Bancario | Te compras un iphone 6 y no tienes para comer |
++-------------------+-----------------+-----------------------------------------------+ 
+
+9.-El promedio de pago de los pacientes que tengan un tipo de examen 16 y que tengan una dieta 4
+
+select AVG (valor) AS 'promedio', nomTipoExamen, descripcion  
+from tipoExamen inner join examen on tipoExamen.id_tipoExamen
+inner join historiaClinica on examen.id_historiaClinica=historiaClinica.id_historiaClinica
+inner join dieta on historiaClinica.id_historiaClinica=dieta.id_historiaClinica
+inner join paciente on historiaClinica.id_historiaClinica=paciente.id_historiaClinica
+inner join factura on paciente.id_paciente=factura.id_paciente
+inner join pago on factura.id_factura=pago.id_factura
+where  nomTipoExamen='Hepatico' and descripcion='dieta blanda'
+
++-------------------+---------------+--------------+
+| promedio          | nomTipoExamen | descripcion  |
++-------------------+---------------+--------------+
+| 962.4810810810825 | Hepatico      | Dieta blanda |
++-------------------+---------------+--------------+
+
+10.-La varianza de los tratamientos aplicados a los pacientes en el 2010.
+
+select variance(id_tratamiento) from tratamiento where fechaInicio between'2010-01-01' and '2010-12-31'
+
++--------------------------+
+| variance(id_tratamiento) |
++--------------------------+
+|        1110.888888888889 |
++--------------------------+ 
+
+11.la varianza de los tipos de examen aplicados a los pacientes en el 2011 y que tengan una dieta 6.
+
+select variance(examen.id_tipoExamen) from tipoexamen 
+inner join examen on examen.id_tipoexamen =tipoexamen.id_tipoexamen
+inner join historiaclinica on historiaclinica.id_historiaclinica=examen.id_historiaclinica 
+inner join dieta on dieta.id_historiaclinica=historiaclinica.id_historiaclinica
+where fechaAplicacion between '2011-01-01' and '2011-12-31' 
+and contenido='5 comidas al dia cada 3 horas rica en verdura'
+
++--------------------------------+
+| variance(examen.id_tipoExamen) |
++--------------------------------+
+|                              0 |
++--------------------------------+
